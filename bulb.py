@@ -1,5 +1,9 @@
 
-'''Class that contains the set of rules around sensors'''
+# Since python 2.7 doesn't support enums,
+class BULB_STATES:
+    OFF, NOT_HOME, NOT_AROUND, IN_BED, NOT_WASTED = range(5)
+
+'''Class to contain the set of rules of around sensors'''
 class Bulb(object):
 
     def __init__(self,  name, lightSensor, presenceSensors, homeSensor, wastage_function):
@@ -17,43 +21,48 @@ class Bulb(object):
 # Actual function implementation for the given lights
 
 def kitchenLampWasted(self):
-    # assumes self.presence_sensors = [desk_sensor, bed_sensor]
+    desk_sensor = self.presence_sensors[0]
+    bed_sensor = self.presence_sensors[1]
+
     if not self.light_sensor.isOn():
-        return False, 'OFF'
+        return False, BULB_STATES.OFF
     elif not self.home_sensor.isHome():
-        return True, 'NOT_HOME'
-    elif self.presence_sensors[0].isAround():
-        return True, 'NOT_AROUND'
-    elif self.presence_sensors[1].isAround():
-        return True, 'IN_BED'
+        return True, BULB_STATES.NOT_HOME
+    elif desk_sensor.isAround():
+        return True, BULB_STATES.NOT_AROUND
+    elif bed_sensor.isAround():
+        return True, BULB_STATES.IN_BED
     else:
-        return False,'NOT_WASTED'
+        return False,BULB_STATES.NOT_WASTED
 
 def deskLampWasted(self):
-    # assumes self.presence_sensors = [desk_sensor, bed_sensor]
+    desk_sensor = self.presence_sensors[0]
+    bed_sensor = self.presence_sensors[1]
+
     if not self.light_sensor.isOn():
-        return False, 'OFF'
+        return False, BULB_STATES.OFF
     elif not self.home_sensor.isHome():
-        return True, 'NOT_HOME'
-    elif self.presence_sensors[0].isAround():
-        return False, 'NOT_WASTED'
-    elif self.presence_sensors[1].isAround():
-        return True, 'IN_BED'
+        return True, BULB_STATES.NOT_HOME
+    elif desk_sensor.isAround():
+        return False, BULB_STATES.NOT_WASTED
+    elif bed_sensor.isAround():
+        return True, BULB_STATES.IN_BED
     else:
-        return True,'NOT_AROUND'
+        return True,BULB_STATES.NOT_AROUND
 
 def bedroomLampWasted(self):
-    # assumes self.presence_sensors = [desk_sensor, bed_sensor]
+    desk_sensor = self.presence_sensors[0]
+    bed_sensor = self.presence_sensors[1]
     if not self.light_sensor.isOn():
-        return False, 'OFF'
+        return False, BULB_STATES.OFF
     elif not self.home_sensor.isHome():
-        return True, 'NOT_HOME'
-    elif self.presence_sensors[0].isAround():
-        return True, 'NOT_AROUND'
-    elif self.presence_sensors[1].isAround():
-        return True, 'IN_BED'
+        return True, BULB_STATES.NOT_HOME
+    elif desk_sensor.isAround():
+        return True, BULB_STATES.NOT_AROUND
+    elif bed_sensor.isAround():
+        return True, BULB_STATES.IN_BED
     else:
-        return False, 'NOT_WASTED'
+        return False, BULB_STATES.NOT_WASTED
 
 
 
