@@ -1,64 +1,59 @@
 
-import datetime
-
-
+'''Class that contains the set of rules around sensors'''
 class Bulb(object):
 
-    def __init__(self,  name=None):
+    def __init__(self,  name, lightSensor, presenceSensors, homeSensor, wastage_function):
         self.name = name
-        self.not_home_wasted = []
-        self.not_present_wasted = []
-        self.sleeping_wasted = []
-        self.utilized = []
-        # 3d array matrix[home][present][sleeping]
-        self.matrix = [[[self.utilized for k in xrange(2)] for j in xrange(2)] for i in xrange(2)]
+        self.light_sensor = lightSensor
+        self.presence_sensors = presenceSensors
+        self.home_sensor = homeSensor
+        self.wastage_function = wastage_function
 
-    def populate_matrix(self,not_home_wasted,not_present_wasted,sleeping_wasted):
-        for triple in not_home_wasted:
-            self.matrix [triple[0]][triple[1]][triple[2]] = self.not_home_wasted
 
-        for triple in not_present_wasted:
-            self.matrix [triple[0]][triple[1]][triple[2]] = self.not_present_wasted
+    def isWasted(self, *args):
+        return self.wastage_function(self,*args)
 
-        for triple in sleeping_wasted:
-            self.matrix [triple[0]][triple[1]][triple[2]] = self.sleeping_wasted
 
-    def get_sleep_stats(self,days=1):
-        '''Returns the time in minutes that the lights were wasted because the person was asleep'''
-        last_day = datetime.datetime.now() - datetime.timedelta(days= days+1)
-        minutes = 0
-        for entry in self.sleeping_wasted:
-            if entry>=last_day:
-                minutes+=1
-        return minutes
+# Actual function implementation for the given lights
 
-    def get_non_presence_stats(self,days=1):
-        '''Returns the time in minutes that the lights were wasted because the person was not around'''
-        last_day = datetime.datetime.now() - datetime.timedelta(days= days+1)
-        minutes = 0
-        for entry in self.not_present_wasted:
-            if entry>=last_day:
-                minutes+=1
-        return minutes
+def kitchenLampWasted(self):
+    # assumes self.presence_sensors = [desk_sensor, bed_sensor]
+    if not self.light_sensor.isOn():
+        return False, 'OFF'
+    elif not self.home_sensor.isHome():
+        return True, 'NOT_HOME'
+    elif self.presence_sensors[0].isAround():
+        return True, 'NOT_AROUND'
+    elif self.presence_sensors[1].isAround():
+        return True, 'IN_BED'
+    else:
+        return False,'NOT_WASTED'
 
-    def get_non_home_stats(self,days=1):
-        '''Returns the time in minutes that the lights were wasted because the person was not at home'''
-        last_day = datetime.datetime.now() - datetime.timedelta(days= days+1)
-        minutes = 0
-        for entry in self.not_home_wasted:
-            if entry>=last_day:
-                minutes+=1
-        return minutes
+def deskLampWasted(self):
+    # assumes self.presence_sensors = [desk_sensor, bed_sensor]
+    if not self.light_sensor.isOn():
+        return False, 'OFF'
+    elif not self.home_sensor.isHome():
+        return True, 'NOT_HOME'
+    elif self.presence_sensors[0].isAround():
+        return False, 'NOT_WASTED'
+    elif self.presence_sensors[1].isAround():
+        return True, 'IN_BED'
+    else:
+        return True,'NOT_AROUND'
 
-    def get_utilisation_stats(self,days=1):
-        '''Returns the time in minutes that the lights were not wasted'''
-        last_day = datetime.datetime.now() - datetime.timedelta(days= days+1)
-        minutes = 0
-        for entry in self.utilized:
-            if entry>=last_day:
-                minutes+=1
-        return minutes
+def bedroomLampWasted(self):
+    # assumes self.presence_sensors = [desk_sensor, bed_sensor]
+    if not self.light_sensor.isOn():
+        return False, 'OFF'
+    elif not self.home_sensor.isHome():
+        return True, 'NOT_HOME'
+    elif self.presence_sensors[0].isAround():
+        return True, 'NOT_AROUND'
+    elif self.presence_sensors[1].isAround():
+        return True, 'IN_BED'
+    else:
+        return False, 'NOT_WASTED'
 
-    def log_stats(self,key):
-        self.matrix[key[0]][key[1]][key[2]].append(datetime.datetime.now())
+
 
