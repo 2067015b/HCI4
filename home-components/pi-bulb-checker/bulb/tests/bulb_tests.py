@@ -11,15 +11,18 @@ class BulbTests(unittest.TestCase):
         self.bed_sensor = mockito.mock()
         self.light_sensor = mockito.mock()
 
-    def setReturnValues(self, bools):
-        mockito.when(self.home_sensor).isHome().thenReturn(bools[0])
-        mockito.when(self.desk_sensor).isAround().thenReturn(bools[1])
-        mockito.when(self.bed_sensor).isAround().thenReturn(bools[2])
-        mockito.when(self.light_sensor).isOn().thenReturn(bools[3])
+    def set_fixed_sensor_readings(self, isHome, isAroundDesk, isAroundBed, isBulbOn):
+        mockito.when(self.home_sensor).isHome().thenReturn(isHome)
+        mockito.when(self.desk_sensor).isAround().thenReturn(isAroundDesk)
+        mockito.when(self.bed_sensor).isAround().thenReturn(isAroundBed)
+        mockito.when(self.light_sensor).isOn().thenReturn(isBulbOn)
 
     def test_kitchen_lamp_wastedNotAround(self):
         # ARRANGE
-        self.setReturnValues((True, True, False, True))
+        self.set_fixed_sensor_readings(isHome=True,
+                                       isAroundDesk=True,
+                                       isAroundBed=False,
+                                       isBulbOn=True)
 
         bulb = Bulb('Kitchen',
                     self.light_sensor,
@@ -37,7 +40,10 @@ class BulbTests(unittest.TestCase):
 
     def test_kitchen_lamp_wastedInBed(self):
         # ARRANGE
-        self.setReturnValues((True, False, True, True))
+        self.set_fixed_sensor_readings(isHome=True,
+                                       isAroundDesk=False,
+                                       isAroundBed=True,
+                                       isBulbOn=True)
 
         bulb = Bulb('Kitchen',
                     self.light_sensor,
@@ -55,7 +61,10 @@ class BulbTests(unittest.TestCase):
 
     def test_kitchen_lamp_wastedNotHome(self):
         # ARRANGE
-        self.setReturnValues((False, False, True, True))
+        self.set_fixed_sensor_readings(isHome=False,
+                                       isAroundDesk=False,
+                                       isAroundBed=True,
+                                       isBulbOn=True)
 
         bulb = Bulb('Kitchen',
                     self.light_sensor,
@@ -72,7 +81,10 @@ class BulbTests(unittest.TestCase):
 
     def test_kitchenLampNotWasted(self):
         # ARRANGE
-        self.setReturnValues((True, False, True, False))
+        self.set_fixed_sensor_readings(isHome=True,
+                                       isAroundDesk=False,
+                                       isAroundBed=True,
+                                       isBulbOn=False)
 
         bulb = Bulb('Kitchen',
                     self.light_sensor,
@@ -90,7 +102,10 @@ class BulbTests(unittest.TestCase):
 
     def test_desk_lamp_wastedNotAround(self):
         # ARRANGE
-        self.setReturnValues((True, False, False, True))
+        self.set_fixed_sensor_readings(isHome=True,
+                                       isAroundDesk=False,
+                                       isAroundBed=False,
+                                       isBulbOn=True)
 
         bulb = Bulb('Desk',
                     self.light_sensor,
@@ -108,7 +123,10 @@ class BulbTests(unittest.TestCase):
 
     def test_desk_lamp_wastedNotHome(self):
         # ARRANGE
-        self.setReturnValues((False, False, False, True))
+        self.set_fixed_sensor_readings(isHome=False,
+                                       isAroundDesk=False,
+                                       isAroundBed=False,
+                                       isBulbOn=True)
 
         bulb = Bulb('Desk',
                     self.light_sensor,
@@ -126,7 +144,10 @@ class BulbTests(unittest.TestCase):
 
     def test_deskLampNotWasted(self):
         # ARRANGE
-        self.setReturnValues((True, True, False, True))
+        self.set_fixed_sensor_readings(isHome=True,
+                                       isAroundDesk=True,
+                                       isAroundBed=False,
+                                       isBulbOn=True)
 
         bulb = Bulb('Desk',
                     self.light_sensor,
@@ -144,7 +165,10 @@ class BulbTests(unittest.TestCase):
 
     def test_deskLampOff(self):
         # ARRANGE
-        self.setReturnValues((True, True, False, False))
+        self.set_fixed_sensor_readings(isHome=True,
+                                       isAroundDesk=True,
+                                       isAroundBed=False,
+                                       isBulbOn=False)
 
         bulb = Bulb('Desk',
                     self.light_sensor,
@@ -162,7 +186,10 @@ class BulbTests(unittest.TestCase):
 
     def test_desk_lamp_wastedNotAround(self):
         # ARRANGE
-        self.setReturnValues((True, False, False, True))
+        self.set_fixed_sensor_readings(isHome=True,
+                                       isAroundDesk=False,
+                                       isAroundBed=False,
+                                       isBulbOn=True)
 
         bulb = Bulb('Desk',
                     self.light_sensor,
@@ -180,7 +207,10 @@ class BulbTests(unittest.TestCase):
 
     def test_desk_lamp_wastedNotHome(self):
         # ARRANGE
-        self.setReturnValues((False, True, False, True))
+        self.set_fixed_sensor_readings(isHome=False,
+                                       isAroundDesk=True,
+                                       isAroundBed=False,
+                                       isBulbOn=True)
 
         bulb = Bulb('Desk',
                     self.light_sensor,
@@ -198,7 +228,10 @@ class BulbTests(unittest.TestCase):
 
     def test_bedroomLampOff(self):
         # ARRANGE
-        self.setReturnValues((True, True, False, False))
+        self.set_fixed_sensor_readings(isHome=True,
+                                       isAroundDesk=True,
+                                       isAroundBed=False,
+                                       isBulbOn=False)
 
         bulb = Bulb('Desk',
                     self.light_sensor,
