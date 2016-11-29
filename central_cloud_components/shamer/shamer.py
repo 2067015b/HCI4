@@ -27,7 +27,7 @@ class Shamer(object):
         bulbs_to_shame = {}
         for bulb in bulbs:
             reason, period = self.get_worst_state(data[bulb])
-            if (data[bulb][BulbStates.NOT_WASTED] == 0):
+            if (data[bulb][BulbStates.NOT_WASTED] == 0) and (period != 0):
                 bulbs_to_shame[bulb] = {'reason': reason, 'period': period}
             elif (period/data[bulb][BulbStates.NOT_WASTED]>(1-self.shaming_rate)) or \
                 (period > (days*4*60)):
