@@ -3,23 +3,23 @@ from hardware_classes import *
 
 arduino = ArduinoSensorsSlave(0x03)
 
-lamps = {
-    "deskLamp": Lamp(arduino, 0)
-}
+lamp_sensors = [
+    Lamp(arduino, 0)
+]
 
-furnitures = {
-    "desk": PresenceAwareFurniture(arduino, 0)
-}
-
-
-@route('/lamp/<lamp_name>')
-def get_lamp_state(lamp_name):
-    return str(lamps[lamp_name].is_on())
+presence_sensors = [
+    PresenceAwareFurniture(arduino, 0)
+]
 
 
-@route('/furniture/<furniture_name>')
-def get_lamp_state(furniture_name):
-    return str(furnitures[furniture_name].is_around())
+@route('/lamp-sensor/<lamp_sensor_index>')
+def get_lamp_state(lamp_sensor_index):
+    return str(lamp_sensors[lamp_sensor_index].is_on())
+
+
+@route('/presence-sensor/<presence_sensor_index>')
+def get_lamp_state(presence_sensor_index):
+    return str(presence_sensors[presence_sensor_index].is_around())
 
 # This actually spins up the server and it starts listening. To listen on 0.0.0.0 you might need root privileges
 run(host='0.0.0.0', port=8666, debug=True)
