@@ -15,18 +15,18 @@ screen -t sensors-server bash
 stuff "cd ~/HCI4/ \015"
 stuff "export PYTHONPATH=~/HCI4 \015"
 stuff "clear \015"
-stuff "python home_components/pi_sensors_server/sensors_server.py \015"
+stuff "sleep 2 && python home_components/pi_sensors_server/sensors_server.py \015"
 
 focus left
 
 split right horizontally
 split
 focus
-screen  -t periodic-facebook-shamer bash
+screen  -t periodic-bulbs-checker bash
 stuff "cd ~/HCI4/ \015"
 stuff "export PYTHONPATH=~/HCI4 \015"
 stuff "clear \015"
-stuff "python home_components/pi_bulb_checker/bulb-checker.py \015"
+stuff "sleep 2 && python home_components/pi_bulb_checker/bulb-checker.py \015"
 
 focus right
 
@@ -37,4 +37,4 @@ screen  -t periodic-facebook-shamer bash
 stuff "cd ~/HCI4/ \015"
 stuff "export PYTHONPATH=~/HCI4 \015"
 stuff "clear \015"
-stuff "python central_cloud_components/shamer/shamer.py \015"
+stuff "sleep 2 && python central_cloud_components/shamer/shamer.py \015"
