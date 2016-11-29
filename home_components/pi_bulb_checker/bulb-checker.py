@@ -37,7 +37,7 @@ if __name__ == "__main__":
         PresenceSensor("http://localhost:8666/presence-sensor/0"),  # desk
         PresenceSensor("http://localhost:8666/presence-sensor/1")   # bed
     ]
-    desk_lamp = Bulb("deskLamp",
+    desk_lamp = Bulb("desk",
                      desk_lamp_light_sensor,
                      desk_lamp_relevant_presence_sensors,
                      home_sensor,
