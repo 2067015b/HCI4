@@ -3,9 +3,14 @@ from home_components import BulbStates
 from central_cloud_components import Analyzer
 from central_cloud_components import FBOAuth
 
+SAMPLES_PER_MINUTE = 6
+DAY = 1
+WEEK = 7
+DEFAULT_SHAMING_RATE = 0.8
+
 class Shamer(object):
 
-    def __init__(self,fb_user_token, shaming_rate = 0.8):
+    def __init__(self,fb_user_token, shaming_rate = DEFAULT_SHAMING_RATE):
         self.token = fb_user_token
         self.FBPoster = FBPoster(fb_user_token)
         self.TwitterPoster = None
@@ -15,7 +20,7 @@ class Shamer(object):
                BulbStates.NOT_AROUND: "%s left my %s lights on for %s while I wasn't around."
                }
 
-    def shame_user(self, data = {}, days = 1):
+    def shame_user(self, data = {}, days = DAY):
         ''' Decides on what to post, possibly aggregates several posts into one.'''
         bulbs = data.keys()
         bulbs_to_shame = {}
@@ -33,12 +38,12 @@ class Shamer(object):
 
 
 
-    def format_post(self, bulbs_to_shame, days = 1):
+    def format_post(self, bulbs_to_shame, days = DAY):
         ''' Formats the post given the reason(s) provided. '''
         time_window = [" And I", " I also"]
-        if (days == 1):
+        if (days == DAY):
             time_window.append("Yesterday I")
-        elif (days == 7):
+        elif (days == WEEK):
             time_window.append("Last week I")
         else:
             time_window.append("In the last %d days I" % days)
@@ -85,7 +90,7 @@ class Shamer(object):
         return message
 
     def get_formatted_time(self, minutes):
-        minutes = minutes*6
+        minutes = minutes * SAMPLES_PER_MINUTE
         if int(minutes / 60) == 1:
             time = '%d hour and %d minutes' % (minutes / 60, (minutes % 60))
         elif int(minutes /60) > 1:
@@ -120,5 +125,5 @@ if __name__ == "__main__":
     analyzer = Analyzer()
     bulb_statistics = analyzer.run_analysis()
 
-    shamer = Shamer(user_token, 0.8)
+    shamer = Shamer(user_token, DEFAULT_SHAMING_RATE)
     shamer.shame_user(bulb_statistics)
