@@ -16,7 +16,6 @@ class BulbChecker(object):
 
     @staticmethod
     def __submit_datapoint(bulb_name, state):
-        return
         """ Submits this datapoint into the db """
         return urllib2.urlopen(
             "http://localhost:8555/submit-bulb-datapoint?bulbName=" + bulb_name + "&state=" + str(state))
@@ -33,10 +32,10 @@ class BulbChecker(object):
 if __name__ == "__main__":
     home_sensor = HomeSensor()
 
-    desk_lamp_light_sensor = LightSensor("http://pi3a.local:8666/light-sensor/0");
+    desk_lamp_light_sensor = LightSensor("http://localhost:8666/light-sensor/0");
     desk_lamp_relevant_presence_sensors = [
-        PresenceSensor("http://pi3a.local:8666/presence-sensor/0"),  # desk
-        PresenceSensor("http://pi3a.local:8666/presence-sensor/1")   # bed
+        PresenceSensor("http://localhost:8666/presence-sensor/0"),  # desk
+        PresenceSensor("http://localhost:8666/presence-sensor/1")   # bed
     ]
     desk_lamp = Bulb("deskLamp",
                      desk_lamp_light_sensor,
