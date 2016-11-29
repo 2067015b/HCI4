@@ -26,7 +26,7 @@ screen  -t periodic-bulbs-checker bash
 stuff "cd ~/HCI4/ \015"
 stuff "export PYTHONPATH=~/HCI4 \015"
 stuff "clear \015"
-stuff "sleep 2 && python home_components/pi_bulb_checker/bulb-checker.py \015"
+stuff "sleep 4 && python home_components/pi_bulb_checker/bulb-checker.py \015"
 
 focus right
 
@@ -37,4 +37,4 @@ screen  -t periodic-facebook-shamer bash
 stuff "cd ~/HCI4/ \015"
 stuff "export PYTHONPATH=~/HCI4 \015"
 stuff "clear \015"
-stuff "sleep 2 && python central_cloud_components/shamer/shamer.py \015"
+stuff "sleep 6 && python central_cloud_components/shamer/shamer.py \015"
