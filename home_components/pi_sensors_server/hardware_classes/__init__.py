@@ -1,0 +1,2 @@
+from Arduino_sensors_slave import Arduino_sensors_slave
+from Lamp import Lamp
