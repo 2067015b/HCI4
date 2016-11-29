@@ -85,6 +85,7 @@ class Shamer(object):
         return message
 
     def get_formatted_time(self, minutes):
+        minutes = minutes*6
         if int(minutes / 60) == 1:
             time = '%d hour and %d minutes' % (minutes / 60, (minutes % 60))
         elif int(minutes /60) > 1:
