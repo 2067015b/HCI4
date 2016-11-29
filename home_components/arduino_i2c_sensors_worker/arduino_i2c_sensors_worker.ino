@@ -82,22 +82,22 @@ void setup(void) {
 }
  
 void loop(void) {
-  Serial.println("Current light readings/thresholds: ");
+//  Serial.println("Current light readings/thresholds: ");
   for (int i = 0; i < NUMBER_OF_LAMPS; i++) {
     lampsReadings[i] = analogRead(lampsAnalogPins[i]);
-    Serial.print("    Lamp "); Serial.print(i); Serial.print(": "); 
-    Serial.print(lampsReadings[i]); Serial.print("/"); Serial.println(lampThresholds[i]);
+//    Serial.print("    Lamp "); Serial.print(i); Serial.print(": "); 
+//    Serial.print(lampsReadings[i]); Serial.print("/"); Serial.println(lampThresholds[i]);
   }
-  Serial.println();
+//  Serial.println();
 
   
-  Serial.println("Current presence sensor readings/thresholds: ");
+//  Serial.println("Current presence sensor readings/thresholds: ");
   for (int i = 0; i < NUMBER_OF_PRESENCE_SENSORS; i++) {
     presenceSensorsReadings[i].addValue(time(presenceSensorsPins[i], presenceSensorsPinBitmasks[i]));
-    Serial.print("    Presence sensor "); Serial.print(i); Serial.print(": "); 
-    Serial.print(presenceSensorsReadings[i].getAverage()); Serial.print("/"); Serial.println(presenceSensorsThresholds[i]);
+//    Serial.print("    Presence sensor "); Serial.print(i); Serial.print(": "); 
+//    Serial.print(presenceSensorsReadings[i].getAverage()); Serial.print("/"); Serial.println(presenceSensorsThresholds[i]);
   }
-  Serial.println();
+//  Serial.println();
 
   
 
@@ -158,21 +158,21 @@ void i2c_receiveData(int byteCount) {
   
   int value = receiveBuffer[2] << 8;
   value |= receiveBuffer[3];
-
-  Serial.print("[command: ");
-  Serial.print(command);
-  Serial.print(", sensor_index: ");
-  Serial.print(sensor_index);
-  Serial.print(", value: ");
-  Serial.print(value);
-  Serial.println("]");
+//
+//  Serial.print("[command: ");
+//  Serial.print(command);
+//  Serial.print(", sensor_index: ");
+//  Serial.print(sensor_index);
+//  Serial.print(", value: ");
+//  Serial.print(value);
+//  Serial.println("]");
 
   // mirror back the command and sensor_index about which we're replying
   sendBuffer[0] = command;
   sendBuffer[1] = sensor_index;
     
   if (command == COMMAND_GET_LAMP) {
-    int is_on = lampsReadings[sensor_index];
+    int is_on = lampsReadings[sensor_index] > lampThresholds[sensor_index];
 
     // put the requested value into the send buffer
     sendBuffer[2] = highByte(is_on);
@@ -190,15 +190,15 @@ void i2c_receiveData(int byteCount) {
 
 // callback for sending data
 void i2c_sendData() {
-  Serial.print("Sending back data [command: ");
-  Serial.print(sendBuffer[0]);
-  Serial.print(", sensor_index: ");
-  Serial.print(sendBuffer[1]);
-  Serial.print(", value: ");
+//  Serial.print("Sending back data [command: ");
+//  Serial.print(sendBuffer[0]);
+//  Serial.print(", sensor_index: ");
+//  Serial.print(sendBuffer[1]);
+//  Serial.print(", value: ");
   int value = sendBuffer[2] << 8;
   value |= sendBuffer[3];
-  Serial.print(value);
-  Serial.println("]");
+//  Serial.print(value);
+//  Serial.println("]");
   
   Wire.write(sendBuffer, COMMS_BUFFER_SIZE);
 }
