@@ -1,5 +1,6 @@
 import facebook
 import logging
+from time import *
 
 # Class to post a status on user's Facebook wall given their token
 class FBPoster(object):
@@ -13,6 +14,7 @@ class FBPoster(object):
         try:
             graph.put_wall_post(message=text, profile_id=graph.get_object('/me')['id'])
             logging.info('Status posted: %s', text)
+            print "%s: Status posted: %s', "%(strftime("%H:%M:%S", gmtime()), text)
             return True
         except Exception, e:
             logging.error('Posting unsuccessful: %s', text)

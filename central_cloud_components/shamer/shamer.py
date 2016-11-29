@@ -1,5 +1,4 @@
-import time
-
+from time import *
 from central_cloud_components import FBPoster
 from home_components import BulbStates
 from central_cloud_components import Analyzer
@@ -129,5 +128,5 @@ if __name__ == "__main__":
         time.sleep(REPEAT_FREQUENCY_MINUTES*60)
         analyzer = Analyzer()
         bulb_statistics = analyzer.run_analysis()
-
+        print "%s: About to shame the user if necessary. " %  strftime("%H:%M:%S", gmtime())
         shamer.shame_user(bulb_statistics)
