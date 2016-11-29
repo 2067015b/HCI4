@@ -126,7 +126,7 @@ if __name__ == "__main__":
     shamer = Shamer(user_token, SHAMING_RATE)
 
     while True:
-        time.sleep(REPEAT_FREQUENCY_MINUTES*60)
+        sleep(REPEAT_FREQUENCY_MINUTES*60)
         analyzer = Analyzer()
         bulb_statistics = analyzer.run_analysis()
         print "%s: About to shame the user if necessary. " %  strftime("%H:%M:%S", gmtime())
