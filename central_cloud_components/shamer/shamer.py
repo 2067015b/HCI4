@@ -1,10 +1,17 @@
+import time
+
 from central_cloud_components import FBPoster
 from home_components import BulbStates
 from central_cloud_components import Analyzer
+from central_cloud_components import FBOAuth
+
+REPEAT_FREQUENCY_MINUTES = 3
+SAMPLES_PER_MINUTE = 6
+SHAMING_RATE = 0.8
 
 class Shamer(object):
 
-    def __init__(self,fb_user_token, shaming_rate = 0.8):
+    def __init__(self,fb_user_token, shaming_rate = SHAMING_RATE):
         self.token = fb_user_token
         self.FBPoster = FBPoster(fb_user_token)
         self.TwitterPoster = None
@@ -20,7 +27,9 @@ class Shamer(object):
         bulbs_to_shame = {}
         for bulb in bulbs:
             reason, period = self.get_worst_state(data[bulb])
-            if (period/data[bulb][BulbStates.NOT_WASTED]>(1-self.shaming_rate)) or \
+            if (data[bulb][BulbStates.NOT_WASTED] == 0) and (data[bulb][BulbStates.OFF] == 0):
+                bulbs_to_shame[bulb] = {'reason': reason, 'period': period}
+            elif (period/data[bulb][BulbStates.NOT_WASTED]>(1-self.shaming_rate)) or \
                 (period > (days*4*60)):
                 bulbs_to_shame[bulb] = {'reason':reason,'period':period }
         message = self.format_post(bulbs_to_shame, days)
@@ -82,6 +91,7 @@ class Shamer(object):
         return message
 
     def get_formatted_time(self, minutes):
+        minutes = minutes * SAMPLES_PER_MINUTE
         if int(minutes / 60) == 1:
             time = '%d hour and %d minutes' % (minutes / 60, (minutes % 60))
         elif int(minutes /60) > 1:
@@ -105,6 +115,19 @@ class Shamer(object):
             return BulbStates.IN_BED, bulb_tuple[BulbStates.IN_BED]
 
 if __name__ == "__main__":
-    analyzer = Analyzer()
-    bulb_statistics = analyzer.run_analysis()
-    shamer = Shamer('user_token', 0.8)
+    try:
+        token_file = open('user_token.txt','r')
+    except:
+        FBOAuth().authenticate_user()
+        token_file = open('user_token.txt','r')
+    user_token = token_file.read().strip()
+    token_file.close()
+
+    shamer = Shamer(user_token, SHAMING_RATE)
+
+    while True:
+        time.sleep(REPEAT_FREQUENCY_MINUTES*60)
+        analyzer = Analyzer()
+        bulb_statistics = analyzer.run_analysis()
+
+        shamer.shame_user(bulb_statistics)
