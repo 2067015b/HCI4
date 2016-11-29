@@ -1,7 +1,7 @@
 import time
 
-from central_cloud_components import FBPoster
 from home_components import BulbStates
+from central_cloud_components import FBPoster
 from central_cloud_components import Analyzer
 from central_cloud_components import FBOAuth
 
