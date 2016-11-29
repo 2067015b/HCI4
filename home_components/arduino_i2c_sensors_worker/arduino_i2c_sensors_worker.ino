@@ -75,20 +75,31 @@ void setup(void) {
       sum += analogRead(lampsAnalogPins[i]);
     }
     int baseline = sum / 200;
-    lampThresholds[i] = baseline * 1.003;
+    lampThresholds[i] = baseline * 1.6;
   }
   
   Serial.println("Finished setting up everything. ");
 }
  
 void loop(void) {
+  Serial.println("Current light readings/thresholds: ");
   for (int i = 0; i < NUMBER_OF_LAMPS; i++) {
     lampsReadings[i] = analogRead(lampsAnalogPins[i]);
+    Serial.print("    Lamp "); Serial.print(i); Serial.print(": "); 
+    Serial.print(lampsReadings[i]); Serial.print("/"); Serial.println(lampThresholds[i]);
   }
+  Serial.println();
+
   
+  Serial.println("Current presence sensor readings/thresholds: ");
   for (int i = 0; i < NUMBER_OF_PRESENCE_SENSORS; i++) {
     presenceSensorsReadings[i].addValue(time(presenceSensorsPins[i], presenceSensorsPinBitmasks[i]));
+    Serial.print("    Presence sensor "); Serial.print(i); Serial.print(": "); 
+    Serial.print(presenceSensorsReadings[i].getAverage()); Serial.print("/"); Serial.println(presenceSensorsThresholds[i]);
   }
+  Serial.println();
+
+  
 
   feedback_on_led();
 }
