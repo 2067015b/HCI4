@@ -1,0 +1,40 @@
+# no startup bullshit
+startup_message off
+
+# setup left vertical screen
+screen -t data-storing-endpoint bash
+stuff "cd ~/HCI4/ \015"
+stuff "export PYTHONPATH=~/HCI4 \015"
+stuff "clear \015"
+stuff "python central_cloud_components/per_user_data_storage/endpoint-server.py \015"
+
+# setup right vertical screen
+split -v
+focus
+screen -t sensors-server bash
+stuff "cd ~/HCI4/ \015"
+stuff "export PYTHONPATH=~/HCI4 \015"
+stuff "clear \015"
+stuff "python home_components/pi_sensors_server/sensors_server.py \015"
+
+focus left
+
+split right horizontally
+split
+focus
+screen  -t periodic-facebook-shamer bash
+stuff "cd ~/HCI4/ \015"
+stuff "export PYTHONPATH=~/HCI4 \015"
+stuff "clear \015"
+stuff "python home_components/pi_bulb_checker/bulb-checker.py \015"
+
+focus right
+
+split right horizontally
+split
+focus
+screen  -t periodic-facebook-shamer bash
+stuff "cd ~/HCI4/ \015"
+stuff "export PYTHONPATH=~/HCI4 \015"
+stuff "clear \015"
+stuff "python central_cloud_components/shamer/shamer.py \015"
