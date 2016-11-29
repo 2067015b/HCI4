@@ -1,6 +1,7 @@
 from central_cloud_components import FBPoster
 from home_components import BulbStates
 from central_cloud_components import Analyzer
+from central_cloud_components import FBOAuth
 
 class Shamer(object):
 
@@ -105,6 +106,15 @@ class Shamer(object):
             return BulbStates.IN_BED, bulb_tuple[BulbStates.IN_BED]
 
 if __name__ == "__main__":
+    try:
+        token_file = open('user_token.txt','r')
+    except:
+        FBOAuth().authenticate_user()
+        token_file = open('user_token.txt','r')
+    user_token = token_file.read()
+    token_file.close()
+
     analyzer = Analyzer()
     bulb_statistics = analyzer.run_analysis()
     shamer = Shamer('user_token', 0.8)
+    shamer.shame_user(bulb_statistics)

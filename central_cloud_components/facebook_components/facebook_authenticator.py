@@ -16,14 +16,14 @@ class FBOAuth(object):
     using the Facebook API.
     """
 
-    def __init__(self, username=''):
-        self.username = username
+    def __init__(self, filename='user_token'):
+        self.filename = filename
         self.AUTHENTICATION_CODE = ''
         self.ACCESS_TOKEN = ''
 
     def output_to_file(self,token):
         try:
-            f = open(self.username+'.txt','w')
+            f = open(self.filename + '.txt', 'w')
             f.write(token)
             f.close()
             print 'Authentication token was saved into the file: %s.txt' % username

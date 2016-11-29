@@ -46,8 +46,7 @@ class DBManager(object):
         try:
             return database[name]
         except KeyError:
-
-            return None
+            return {}
 
     def reset(self):
         '''Deletes the database file '''
