@@ -1,4 +1,4 @@
-class PresenceAwareFurniture:
+class PresenceSensor:
     def __init__(self, arduino, presence_sensor_index):
         self.arduino = arduino
         self.presence_sensor_index = presence_sensor_index
