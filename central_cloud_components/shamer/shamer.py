@@ -1,7 +1,7 @@
-import time
-
-from home_components import BulbStates
+import urllib2
+from time import *
 from central_cloud_components import FBPoster
+from home_components import BulbStates
 from central_cloud_components import Analyzer
 from central_cloud_components import FBOAuth
 
@@ -129,5 +129,7 @@ if __name__ == "__main__":
         time.sleep(REPEAT_FREQUENCY_MINUTES*60)
         analyzer = Analyzer()
         bulb_statistics = analyzer.run_analysis()
-
+        print "%s: About to shame the user if necessary. " %  strftime("%H:%M:%S", gmtime())
         shamer.shame_user(bulb_statistics)
+        urllib2.urlopen(
+            "http://localhost:8555/wipe-all-aggregated-data")
