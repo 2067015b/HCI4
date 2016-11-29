@@ -9,8 +9,8 @@ BulbStatistics = collections.namedtuple('BulbStatistics', BulbStates.get_all_sta
 
 class AnalyzerTests(unittest.TestCase):
 
-    @mock.patch('analyzer.Analyzer.retrieve_users_bulbs', return_value=["kitchen","desk","bedroom"])
-    @mock.patch('analyzer.Analyzer.retrieve_and_sort_bulbs_data',
+    @mock.patch('Analyzer.retrieve_users_bulbs', return_value=["kitchen","desk","bedroom"])
+    @mock.patch('Analyzer.retrieve_bulbs_data',
                 return_value = BulbStatistics(OFF=490, NOT_HOME=34, NOT_AROUND=130, IN_BED=64, NOT_WASTED=560))
     def test_run_analysis(self, retrieve_bulbs_mock, retrieve_data_mock):
         #ARRANGE
@@ -29,7 +29,7 @@ class AnalyzerTests(unittest.TestCase):
         self.assertEquals(result,expected)
 
 
-    @mock.patch('analyzer.Analyzer.retrieve_users_bulbs',
+    @mock.patch('Analyzer.retrieve_users_bulbs',
                 return_value=[])
     def test_run_analysis_empty(self, retrieve_bulbs_mock):
         # ARRANGE
