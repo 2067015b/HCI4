@@ -1,4 +1,4 @@
-import requests
+import urllib2
 
 class BulbChecker(object):
 
@@ -7,7 +7,7 @@ class BulbChecker(object):
 
     def submit_datapoint(self, bulbName, state):
         ''' Submits this datapoint into the db '''
-        return requests.post("http://localhost:8555/submit-bulb-datapoint", data={'bulbName': bulbName, 'state':state})
+        return urllib2.urlopen("http://localhost:8555/submit-bulb-datapoint?bulbName="+bulbName+"&state="+str(state))
 
 
     def check_bulbs(self):
