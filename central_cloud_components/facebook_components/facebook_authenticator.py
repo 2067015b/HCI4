@@ -69,6 +69,5 @@ class FBOAuth(object):
 
 
 if __name__ =="__main__":
-    username = raw_input("Enter your name: ")
-    FBOAuth(username).authenticate_user()
+    FBOAuth().authenticate_user()
 
