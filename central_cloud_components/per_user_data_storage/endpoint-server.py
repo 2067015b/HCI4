@@ -9,8 +9,16 @@ def submit_bulb_datapoint():
     db = DBManager()
 
     user_data = db.get("USER")
-    user_data[bulb_name][request.query['state']]+=1
-    db.save("USER",user_data)
+    if user_data:
+        bulb_statistics = user_data.get(bulb_name,[0,0,0,0,0])
+        bulb_statistics[int(request.query['state'])]+=1
+        user_data[bulb_name]=bulb_statistics
+        db.save("USER",user_data)
+    else:
+        user_data = {bulb_name:[0,0,0,0,0]}
+        user_data[bulb_name][int(request.query['state'])]+=1
+        db.save("USER",user_data)
+
 
     # This gets returned to whoever made the request (so if you load the URL from a browser you'll see this response)
     return "The data has been added to the aggregate in the pickle for bulb %s: state number: %s" % (bulb_name, str(request.query['state']))
@@ -27,7 +35,7 @@ def get_stats():
     db = DBManager()
     user_data = db.get("USER")
 
-    return user_data[bulb_name]
+    return str(user_data.get(bulb_name,"No such bulb."))
 
 
 
