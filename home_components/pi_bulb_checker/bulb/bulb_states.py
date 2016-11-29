@@ -4,3 +4,6 @@ class BulbStates:
         pass
 
     OFF, NOT_HOME, NOT_AROUND, IN_BED, NOT_WASTED = range(5)
+
+    def get_all_states_as_string(self):
+        return "OFF NOT_HOME NOT_AROUND IN_BED NOT_WASTED"

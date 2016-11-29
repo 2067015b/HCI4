@@ -1,0 +1,1 @@
+from facebook_poster import FBPoster
