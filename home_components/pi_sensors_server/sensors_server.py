@@ -4,11 +4,11 @@ from hardware_classes import *
 arduino = ArduinoSensorsSlave(0x03)
 
 light_sensors = [
-    Lamp(arduino, 0)
+    LightSensor(arduino, 0)
 ]
 
 presence_sensors = [
-    PresenceAwareFurniture(arduino, 0)
+    PresenceSensor(arduino, 0)
 ]
 
 

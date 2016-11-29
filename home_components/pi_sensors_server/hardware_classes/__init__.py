@@ -1,3 +1,3 @@
 from ArduinoSensorsSlave import ArduinoSensorsSlave
-from LightSensor import Lamp
-from PresenceSensor import PresenceAwareFurniture
+from LightSensor import LightSensor
+from PresenceSensor import PresenceSensor
