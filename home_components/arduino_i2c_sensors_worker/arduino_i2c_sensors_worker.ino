@@ -1,7 +1,7 @@
 #include <Wire.h>
 #include "RunningAverage.h"
 
-#define IS_AROUND_FEEDBACK_LED 7
+#define CALIBRATING_LED_PIN A3
 
 #define NUMBER_OF_LAMPS 1
 #define LAMP_0_ANALOG_PIN 0
@@ -9,26 +9,28 @@
 // none can be on PORT B !!!
 int lampsReadings[NUMBER_OF_LAMPS];
 int lampsAnalogPins[NUMBER_OF_LAMPS] = {LAMP_0_ANALOG_PIN};
+int lampFeedbackLedsPins[NUMBER_OF_LAMPS] = {2}; // 2, 3, 4
 int lampThresholds[NUMBER_OF_LAMPS];
-
-// all must be on PORT B !!!
-#define NUMBER_OF_PRESENCE_SENSORS 1
-#define PRESENCE_SENSOR_0_PIN 8
 
 #define resolution 8
 #define mains 50 
 #define refresh 2 * 1000000 / mains
 
+// all must be on PORT B !!!
+#define NUMBER_OF_PRESENCE_SENSORS 2
+#define PRESENCE_SENSOR_0_PIN 8
+#define PRESENCE_SENSOR_1_PIN 9
+
+int presenceSensorsPins[NUMBER_OF_PRESENCE_SENSORS] = {PRESENCE_SENSOR_0_PIN, PRESENCE_SENSOR_1_PIN};
+int presenceSensorFeebackLedsPins[NUMBER_OF_PRESENCE_SENSORS] = {5,6}; // 5, 6, 7
+byte presenceSensorsPinBitmasks[NUMBER_OF_PRESENCE_SENSORS] = {B00000001, B00000010};
+int presenceSensorsThresholds[NUMBER_OF_PRESENCE_SENSORS];
+
 RunningAverage presenceSensorsReadings[NUMBER_OF_PRESENCE_SENSORS] = {
+  RunningAverage(10),
   RunningAverage(10)
 };
 
-int presenceSensorsPins[NUMBER_OF_PRESENCE_SENSORS] = {PRESENCE_SENSOR_0_PIN};
-byte presenceSensorsPinBitmasks[NUMBER_OF_PRESENCE_SENSORS] = {B00000001};
-int presenceSensorsThresholds[NUMBER_OF_PRESENCE_SENSORS];
-
-
-#define IS_AROUND_FEEDBACK_LED 7
 #define I2C_SLAVE_ADDRESS 0x03
 #define COMMS_BUFFER_SIZE 4
 #define COMMAND_GET_LAMP 0
@@ -43,8 +45,6 @@ void setup(void) {
   Wire.onReceive(i2c_receiveData);
   Wire.onRequest(i2c_sendData);
 
-  pinMode(IS_AROUND_FEEDBACK_LED, OUTPUT);
-
   // explicitely start each running average clean
   for (int i = 0; i < NUMBER_OF_PRESENCE_SENSORS; i++) {
     pinMode(presenceSensorsPins[i], INPUT);
@@ -54,10 +54,15 @@ void setup(void) {
   // for presence sensor
   startTimer();
 
+  pinMode(CALIBRATING_LED_PIN, OUTPUT);
+  digitalWrite(CALIBRATING_LED_PIN, HIGH);
+
   Serial.print("Establishing thresholds for ");
   Serial.print(NUMBER_OF_PRESENCE_SENSORS);
   Serial.println(" presence sensors.");
   for (int i = 0; i < NUMBER_OF_PRESENCE_SENSORS; i++) {
+    pinMode(presenceSensorFeebackLedsPins[i], OUTPUT);
+    
     long sum = 0;
     for(int j = 0; j < 200; j++) {
       sum += time(presenceSensorsPins[i], presenceSensorsPinBitmasks[i]);
@@ -70,6 +75,7 @@ void setup(void) {
   Serial.print(NUMBER_OF_LAMPS);
   Serial.println(" lamp sensors.");
   for (int i = 0; i < NUMBER_OF_LAMPS; i++) {
+    pinMode(lampFeedbackLedsPins[i], OUTPUT);
     long sum = 0;
     for(int j = 0; j < 200; j++) {
       sum += analogRead(lampsAnalogPins[i]);
@@ -79,12 +85,19 @@ void setup(void) {
   }
   
   Serial.println("Finished setting up everything. ");
+  digitalWrite(CALIBRATING_LED_PIN, LOW);
 }
  
 void loop(void) {
 //  Serial.println("Current light readings/thresholds: ");
   for (int i = 0; i < NUMBER_OF_LAMPS; i++) {
     lampsReadings[i] = analogRead(lampsAnalogPins[i]);
+    
+    if(lampsReadings[i] > lampThresholds[i]) {
+      digitalWrite(lampFeedbackLedsPins[i], HIGH);
+    } else {
+      digitalWrite(lampFeedbackLedsPins[i], LOW);
+    }
 //    Serial.print("    Lamp "); Serial.print(i); Serial.print(": "); 
 //    Serial.print(lampsReadings[i]); Serial.print("/"); Serial.println(lampThresholds[i]);
   }
@@ -94,14 +107,16 @@ void loop(void) {
 //  Serial.println("Current presence sensor readings/thresholds: ");
   for (int i = 0; i < NUMBER_OF_PRESENCE_SENSORS; i++) {
     presenceSensorsReadings[i].addValue(time(presenceSensorsPins[i], presenceSensorsPinBitmasks[i]));
+    
+    if(presenceSensorsReadings[i].getAverage() > presenceSensorsThresholds[i]) {
+      digitalWrite(presenceSensorFeebackLedsPins[i], HIGH);
+    } else {
+      digitalWrite(presenceSensorFeebackLedsPins[i], LOW);
+    }
 //    Serial.print("    Presence sensor "); Serial.print(i); Serial.print(": "); 
 //    Serial.print(presenceSensorsReadings[i].getAverage()); Serial.print("/"); Serial.println(presenceSensorsThresholds[i]);
   }
 //  Serial.println();
-
-  
-
-  feedback_on_led();
 }
 
 // presence
@@ -201,12 +216,4 @@ void i2c_sendData() {
 //  Serial.println("]");
   
   Wire.write(sendBuffer, COMMS_BUFFER_SIZE);
-}
-
-void feedback_on_led() {
-  if (presenceSensorsReadings[0].getAverage() > presenceSensorsThresholds[0]) {
-    digitalWrite(IS_AROUND_FEEDBACK_LED, HIGH);
-  } else {
-    digitalWrite(IS_AROUND_FEEDBACK_LED, LOW);
-  }
 }

@@ -1,6 +1,6 @@
 import collections
 from home_components import BulbStates
-from .. import DBManager
+from central_cloud_components import DBManager
 
 BulbStatistics = collections.namedtuple('BulbStatistics', BulbStates.get_all_states())
 

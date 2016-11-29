@@ -1,0 +1,3 @@
+from ArduinoSensorsSlave import ArduinoSensorsSlave
+from LightSensor import LightSensor
+from PresenceSensor import PresenceSensor
