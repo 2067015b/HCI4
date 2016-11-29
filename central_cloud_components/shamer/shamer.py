@@ -1,3 +1,4 @@
+import urllib2
 from time import *
 from central_cloud_components import FBPoster
 from home_components import BulbStates
@@ -130,3 +131,5 @@ if __name__ == "__main__":
         bulb_statistics = analyzer.run_analysis()
         print "%s: About to shame the user if necessary. " %  strftime("%H:%M:%S", gmtime())
         shamer.shame_user(bulb_statistics)
+        urllib2.urlopen(
+            "http://localhost:8555/wipe-all-aggregated-data")
