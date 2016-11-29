@@ -1,5 +1,6 @@
 from central_cloud_components import FBPoster
 from home_components import BulbStates
+from central_cloud_components import Analyzer
 
 class Shamer(object):
 
@@ -102,3 +103,8 @@ class Shamer(object):
         elif (bulb_tuple[BulbStates.IN_BED] >= bulb_tuple[BulbStates.NOT_AROUND]) and \
                 (bulb_tuple.IN_BED >= bulb_tuple[BulbStates.NOT_HOME]):
             return BulbStates.IN_BED, bulb_tuple[BulbStates.IN_BED]
+
+if __name__ == "__main__":
+    analyzer = Analyzer()
+    bulb_statistics = analyzer.run_analysis()
+    shamer = Shamer('user_token', 0.8)
