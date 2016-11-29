@@ -1,5 +1,5 @@
-from .. import FBPoster
-from .. import BulbStates
+from central_cloud_components import FBPoster
+from home_components import BulbStates
 
 class Shamer(object):
 
