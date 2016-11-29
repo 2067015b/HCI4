@@ -1,8 +1,11 @@
+import time
+
 from central_cloud_components import FBPoster
 from home_components import BulbStates
 from central_cloud_components import Analyzer
 from central_cloud_components import FBOAuth
 
+REPEAT_FREQUENCY_MINUTES = 3
 SAMPLES_PER_MINUTE = 6
 SHAMING_RATE = 0.8
 
@@ -120,8 +123,11 @@ if __name__ == "__main__":
     user_token = token_file.read().strip()
     token_file.close()
 
-    analyzer = Analyzer()
-    bulb_statistics = analyzer.run_analysis()
-
     shamer = Shamer(user_token, SHAMING_RATE)
-    shamer.shame_user(bulb_statistics)
+
+    while True:
+        time.sleep(REPEAT_FREQUENCY_MINUTES*60)
+        analyzer = Analyzer()
+        bulb_statistics = analyzer.run_analysis()
+
+        shamer.shame_user(bulb_statistics)

@@ -26,7 +26,7 @@ class FBOAuth(object):
             f = open(self.filename + '.txt', 'w')
             f.write(token)
             f.close()
-            print 'Authentication token was saved into the file: %s.txt' % username
+            print 'Authentication token was saved into the file: %s.txt' % self.filename
         except:
             print 'Not able to open/write to the file.'
 
