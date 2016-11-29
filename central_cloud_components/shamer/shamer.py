@@ -21,7 +21,9 @@ class Shamer(object):
         bulbs_to_shame = {}
         for bulb in bulbs:
             reason, period = self.get_worst_state(data[bulb])
-            if (period/data[bulb][BulbStates.NOT_WASTED]>(1-self.shaming_rate)) or \
+            if (data[bulb][BulbStates.NOT_WASTED] == 0) and (data[bulb][BulbStates.OFF] == 0):
+                bulbs_to_shame[bulb] = {'reason': reason, 'period': period}
+            elif (period/data[bulb][BulbStates.NOT_WASTED]>(1-self.shaming_rate)) or \
                 (period > (days*4*60)):
                 bulbs_to_shame[bulb] = {'reason':reason,'period':period }
         message = self.format_post(bulbs_to_shame, days)
@@ -111,10 +113,11 @@ if __name__ == "__main__":
     except:
         FBOAuth().authenticate_user()
         token_file = open('user_token.txt','r')
-    user_token = token_file.read()
+    user_token = token_file.read().strip()
     token_file.close()
 
     analyzer = Analyzer()
     bulb_statistics = analyzer.run_analysis()
-    shamer = Shamer('user_token', 0.8)
+
+    shamer = Shamer(user_token, 0.8)
     shamer.shame_user(bulb_statistics)
