@@ -3,3 +3,4 @@
 central_cloud_components/per_user_data_storage/BulbStatistics.pk
 *.pk
 central_cloud_components/shamer/user_token.txt
+user_token.txt
