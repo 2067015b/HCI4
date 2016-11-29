@@ -1,27 +1,36 @@
 from bottle import *
+from dbmanager import DBManager
 
 
 @route('/submit-bulb-datapoint')
 def submit_bulb_datapoint():
+    '''Submits a point  for the bulbName into the db. '''
     bulb_name = request.query['bulbName']
+    db = DBManager()
 
-    submitted_data = {
-        "is_on": request.query['isOn'],
-        "is_home": request.query['isHome'],
-        "is_around": request.query['isAround'],
-        "is_in_bed": request.query['isInBed']
-    }
-
-    # Debug print statement that would be shown on the server, in the terminal where this runs.
-    print "Pretending we actually added the data to the aggregate in the pickle for bulb '%s': %s" % (bulb_name, str(submitted_data))
+    user_data = db.get("USER")
+    user_data[bulb_name][request.query['state']]+=1
+    db.save("USER",user_data)
 
     # This gets returned to whoever made the request (so if you load the URL from a browser you'll see this response)
-    return "Pretending we actually added the data to the aggregate in the pickle for bulb %s: %s" % (bulb_name, str(submitted_data))
+    return "The data has been added to the aggregate in the pickle for bulb %s: state number: %s" % (bulb_name, str(request.query['state']))
 
 
 @route('/wipe-all-aggregated-data')
 def wipe_all_aggregated_data():
-    pass
+    return DBManager().reset()
+
+@route('/get-stats')
+def get_stats():
+
+    bulb_name = request.query['bulbName']
+    db = DBManager()
+    user_data = db.get("USER")
+
+    return user_data[bulb_name]
+
+
+
 
 # This actually spins up the server and it starts listening. To listen on 0.0.0.0 you might need root privileges
 run(host='0.0.0.0', port=8555, debug=True)
