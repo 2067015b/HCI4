@@ -29,7 +29,7 @@ class Shamer(object):
             reason, period = self.get_worst_state(data[bulb])
             if (data[bulb][BulbStates.NOT_WASTED] == 0) and (period != 0):
                 bulbs_to_shame[bulb] = {'reason': reason, 'period': period}
-            elif (period/data[bulb][BulbStates.NOT_WASTED]>(1-self.shaming_rate)) or \
+            elif ((data[bulb][BulbStates.NOT_WASTED] > 0) and (period/data[bulb][BulbStates.NOT_WASTED]) > (1-self.shaming_rate)) or \
                 (period > (days*4*60)):
                 bulbs_to_shame[bulb] = {'reason':reason,'period':period }
         message = self.format_post(bulbs_to_shame, days)
