@@ -1,5 +1,5 @@
 import collections
-from .. import BulbStates
+from home_components import BulbStates
 from .. import DBManager
 
 BulbStatistics = collections.namedtuple('BulbStatistics', BulbStates.get_all_states())
