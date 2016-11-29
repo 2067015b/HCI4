@@ -8,7 +8,8 @@ light_sensors = [
 ]
 
 presence_sensors = [
-    PresenceSensor(arduino, 0)
+    PresenceSensor(arduino, 0),
+    PresenceSensor(arduino, 1)
 ]
 
 
